@@ -1,11 +1,19 @@
+import os
+from dotenv import load_dotenv
 from telegram import Update
 from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
 import requests
+import sys
 
-# --- INSERISCI QUI LE TUE CHIAVI DIRETTAMENTE ---
-TOKEN = "7989178986:AAEHrIE41NJF_MduzHp0YYlC4bEefsMGWPI"      # <-- Inserisci qui il tuo token del BotFather
-OPENWEATHER_KEY = "acc533319dcdc905c35e31bba7c90e7d"             # <-- Inserisci qui la tua API key OpenWeatherMap
-# --------------------------------------------------
+# 🔹 Carica variabili da .env
+load_dotenv()
+
+TOKEN = os.getenv("TELEGRAM_TOKEN")
+OPENWEATHER_KEY = os.getenv("OPENWEATHER_KEY")
+
+if not TOKEN or ":" not in TOKEN:
+    print("❌ ERRORE: TELEGRAM_TOKEN non trovato o non valido.")
+    sys.exit(1)
 
 # --- Comando /start ---
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
