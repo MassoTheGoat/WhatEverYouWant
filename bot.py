@@ -1,13 +1,15 @@
 from telegram import Update
 from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
 import requests
-import os
 
-TOKEN = os.getenv("7989178986:AAEHrIE41NJF_MduzHp0YYlC4bEefsMGWPI")
+# --- INSERISCI QUI LE TUE CHIAVI DIRETTAMENTE ---
+TOKEN = "7989178986:AAEHrIE41NJF_MduzHp0YYlC4bEefsMGWPI"      # <-- Inserisci qui il tuo token del BotFather
+OPENWEATHER_KEY = "acc533319dcdc905c35e31bba7c90e7d"             # <-- Inserisci qui la tua API key OpenWeatherMap
+# --------------------------------------------------
 
 # --- Comando /start ---
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text("👋 Ciao! Sono il tuo assistente Telegram. Digita /meteo o /sport per iniziare!")
+    await update.message.reply_text("👋 Ciao! Sono il tuo assistente Telegram. Digita /meteo <città> per iniziare!")
 
 # --- Comando /meteo ---
 async def meteo(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -16,8 +18,7 @@ async def meteo(update: Update, context: ContextTypes.DEFAULT_TYPE):
         return
     
     città = " ".join(context.args)
-    api_key = os.getenv("acc533319dcdc905c35e31bba7c90e7d")
-    url = f"https://api.openweathermap.org/data/2.5/weather?q={città}&appid={api_key}&units=metric&lang=it"
+    url = f"https://api.openweathermap.org/data/2.5/weather?q={città}&appid={OPENWEATHER_KEY}&units=metric&lang=it"
     r = requests.get(url).json()
     
     if r.get("cod") != 200:
@@ -28,7 +29,8 @@ async def meteo(update: Update, context: ContextTypes.DEFAULT_TYPE):
     temp = r["main"]["temp"]
     await update.message.reply_text(f"🌤 Meteo a {città}:\n{descrizione.capitalize()}, {temp}°C")
 
-# --- Avvio bot ---
+# --- Avvio del bot ---
+print("✅ Avvio del bot in corso...")
 app = ApplicationBuilder().token(TOKEN).build()
 app.add_handler(CommandHandler("start", start))
 app.add_handler(CommandHandler("meteo", meteo))
